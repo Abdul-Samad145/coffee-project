@@ -2,32 +2,314 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Artisan Coffee Collection - Premium Coffee Explorer</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Coffee!</h1>
+    <!-- Theme Customization Panel -->
+    <div class="theme-panel" id="themePanel">
+        <button class="theme-toggle" id="themePanelToggle" aria-label="Toggle theme panel">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"></path>
+            </svg>
+        </button>
+        <div class="theme-panel-content" id="themePanelContent">
+            <h3>Theme Customization</h3>
+            
+            <div class="theme-section">
+                <label>Color Scheme</label>
+                <div class="theme-presets">
+                    <button class="theme-preset" data-theme="classic" title="Classic Coffee">
+                        <span class="preset-colors">
+                            <span style="background: #2c1810"></span>
+                            <span style="background: #8b4513"></span>
+                            <span style="background: #d4a574"></span>
+                        </span>
+                        Classic
+                    </button>
+                    <button class="theme-preset" data-theme="modern" title="Modern Minimalist">
+                        <span class="preset-colors">
+                            <span style="background: #1a1a2e"></span>
+                            <span style="background: #16213e"></span>
+                            <span style="background: #0f3460"></span>
+                        </span>
+                        Modern
+                    </button>
+                    <button class="theme-preset" data-theme="nature" title="Natural Earth">
+                        <span class="preset-colors">
+                            <span style="background: #2d4a2b"></span>
+                            <span style="background: #5a7c59"></span>
+                            <span style="background: #8fbc8f"></span>
+                        </span>
+                        Nature
+                    </button>
+                    <button class="theme-preset" data-theme="sunset" title="Sunset Warmth">
+                        <span class="preset-colors">
+                            <span style="background: #ff6b6b"></span>
+                            <span style="background: #ee5a6f"></span>
+                            <span style="background: #c44569"></span>
+                        </span>
+                        Sunset
+                    </button>
+                    <button class="theme-preset" data-theme="ocean" title="Ocean Breeze">
+                        <span class="preset-colors">
+                            <span style="background: #0a4d68"></span>
+                            <span style="background: #088395"></span>
+                            <span style="background: #05bfdb"></span>
+                        </span>
+                        Ocean
+                    </button>
+                </div>
+            </div>
 
-    <form>
-        <label for="roast-selection"></label>
-        <select id="roast-selection">
-            <option>light</option>
-            <option>medium</option>
-            <option>dark</option>
-        </select>
-        <input id="submit" type="submit" />
-    </form>
+            <div class="theme-section">
+                <label for="layoutStyle">Layout Style</label>
+                <select id="layoutStyle" class="theme-select">
+                    <option value="grid">Grid View</option>
+                    <option value="list">List View</option>
+                    <option value="masonry">Masonry View</option>
+                    <option value="compact">Compact View</option>
+                </select>
+            </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>NAME</th>
-                <th>ROAST</th>
-            </tr>
-        </thead>
-        <tbody id="coffees"></tbody>
-    </table>
+            <div class="theme-section">
+                <label for="cardStyle">Card Style</label>
+                <select id="cardStyle" class="theme-select">
+                    <option value="elevated">Elevated</option>
+                    <option value="flat">Flat</option>
+                    <option value="outlined">Outlined</option>
+                    <option value="glass">Glassmorphism</option>
+                </select>
+            </div>
+
+            <div class="theme-section">
+                <label for="animationSpeed">Animation Speed</label>
+                <input type="range" id="animationSpeed" min="0.5" max="2" step="0.1" value="1" class="theme-slider">
+                <span class="slider-value">1x</span>
+            </div>
+
+            <div class="theme-section">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="particlesToggle" checked>
+                    <span>Particle Effects</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="soundToggle">
+                    <span>Sound Effects</span>
+                </label>
+            </div>
+
+            <button class="reset-theme" id="resetTheme">Reset to Default</button>
+        </div>
+    </div>
+
+    <!-- Particle Background -->
+    <canvas id="particleCanvas" class="particle-canvas"></canvas>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="coffee-icon">☕</div>
+                    <div>
+                        <h1 class="main-title">Artisan Coffee Collection</h1>
+                        <p class="subtitle">Discover Your Perfect Roast</p>
+                    </div>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalCoffees">14</span>
+                        <span class="stat-label">Varieties</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="favoritesCount">0</span>
+                        <span class="stat-label">Favorites</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="search-section">
+                <div class="search-wrapper">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Search coffee by name..."
+                        autocomplete="off"
+                    >
+                    <button class="clear-search" id="clearSearch" aria-label="Clear search">×</button>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label for="roastFilter" class="filter-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        Roast Type
+                    </label>
+                    <select id="roastFilter" class="filter-select">
+                        <option value="all">All Roasts</option>
+                        <option value="light">Light Roast</option>
+                        <option value="medium">Medium Roast</option>
+                        <option value="dark">Dark Roast</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="sortBy" class="filter-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18M7 12h10M11 18h2"></path>
+                        </svg>
+                        Sort By
+                    </label>
+                    <select id="sortBy" class="filter-select">
+                        <option value="id-asc">ID (Ascending)</option>
+                        <option value="id-desc">ID (Descending)</option>
+                        <option value="name-asc">Name (A-Z)</option>
+                        <option value="name-desc">Name (Z-A)</option>
+                        <option value="roast">Roast Type</option>
+                    </select>
+                </div>
+
+                <button class="filter-toggle" id="showFavorites">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    Show Favorites
+                </button>
+            </div>
+        </div>
+
+        <!-- Add Coffee Section -->
+        <div class="add-coffee-section">
+            <button class="add-coffee-toggle" id="addCoffeeToggle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add New Coffee
+            </button>
+            
+            <form class="add-coffee-form" id="addCoffeeForm">
+                <h3>Add New Coffee Variety</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="coffeeName">Coffee Name</label>
+                        <input 
+                            type="text" 
+                            id="coffeeName" 
+                            class="form-input" 
+                            placeholder="e.g., Colombian Supreme"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="coffeeRoast">Roast Type</label>
+                        <select id="coffeeRoast" class="form-input" required>
+                            <option value="">Select roast...</option>
+                            <option value="light">Light Roast</option>
+                            <option value="medium">Medium Roast</option>
+                            <option value="dark">Dark Roast</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="coffeeOrigin">Origin (Optional)</label>
+                        <input 
+                            type="text" 
+                            id="coffeeOrigin" 
+                            class="form-input" 
+                            placeholder="e.g., Colombia"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="coffeeNotes">Tasting Notes (Optional)</label>
+                        <input 
+                            type="text" 
+                            id="coffeeNotes" 
+                            class="form-input" 
+                            placeholder="e.g., Chocolate, Nutty"
+                        >
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Add Coffee
+                    </button>
+                    <button type="button" class="btn-secondary" id="cancelAdd">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Info -->
+        <div class="results-info">
+            <p id="resultsCount">Showing <strong>14</strong> coffees</p>
+            <div class="view-options">
+                <button class="view-btn active" data-view="grid" title="Grid View">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                </button>
+                <button class="view-btn" data-view="list" title="List View">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Coffee Grid -->
+        <div class="coffee-grid" id="coffeeGrid">
+            <!-- Coffee cards will be dynamically inserted here -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">☕</div>
+            <h3>No coffees found</h3>
+            <p>Try adjusting your search or filters</p>
+        </div>
+    </div>
+
+    <!-- Coffee Detail Modal -->
+    <div class="modal" id="coffeeModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose" aria-label="Close modal">×</button>
+            <div id="modalBody">
+                <!-- Modal content will be dynamically inserted -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <script src="main.js"></script>
 </body>
